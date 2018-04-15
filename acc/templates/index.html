@@ -237,15 +237,29 @@
   <script type='text/javascript'>
     const form = document.getElementById('form');
     const url = 'http://localhost:8080/api/user-settings';
+    const settings_status = document.getElementById('settings-status');
+
+    /**
+     create timeout variable, and clear on submit if a previous
+     timeout has been set, so the timeout is refreshed
+     */
+    let timeout;
+    const removeSettingStatus = () => {
+      timeout = setTimeout(() => {
+        settings_status.style.display = 'none';
+      }, 5000);
+    };
+
     form.onsubmit = (event) => {
+      clearTimeout(timeout);
       event.preventDefault();
       const formSpeed = document.getElementById('speed').value;
       const formDistance = document.getElementById('distance').value;
-      const settings_status = document.getElementById('settings-status');
 
-      settings_status.innerHTML = '';
-      settings_status.style.color = '';
-      settings_status.style.display = 'none';
+      // settings_status.innerHTML = '';
+      // settings_status.style.color = '';
+      // settings_status.style.display = 'none';
+
 
       if (formSpeed.length !== 0 && formDistance.length !== 0) {
         const numSpeed = parseInt(formSpeed);
@@ -267,17 +281,13 @@
         }).then(res => {
           settings_status.innerHTML = 'Settings have been sent to GoPiGo'
           settings_status.style.display = 'block';
-          setTimeout(() => {
-            settings_status.style.display = 'none';
-          }, 3000);
+          removeSettingStatus();
         })
       } else {
         settings_status.innerHTML = 'Settings must not be empty';
         settings_status.style.color = '#f44336';
         settings_status.style.display = 'block';
-        setTimeout(() => {
-          settings_status.style.display = 'none';
-        }, 3000);
+        removeSettingStatus();
       }
     };
   </script>
@@ -379,18 +389,6 @@
         system_info.className = 'hidden';
       }
     };
-  </script>
-
-  <!--
-    handles when the user presses the submit modal close button
-  -->
-  <script>
-    const closeSubmit = document.getElementById('submitModalClose');
-    closeSubmit.onclick = (event) => {
-      event.preventDefault();
-      const modal = document.getElementById('submitModal');
-      modal.style.display = 'none';
-    }
   </script>
 </body>
 
