@@ -8,10 +8,11 @@ from __future__ import print_function
 
 import os.path
 import multiprocessing
+from multiprocessing.managers import BaseManager
 import time
 import settings
 
-import acc
+#import acc
 import api
 
 
@@ -39,8 +40,7 @@ def main():
     technically safeDistance, power False because we don't
     want to start the rover immediately after the application
     """
-    system_info = manager.SystemInfo(  # pylint: disable=no-member
-        userSetSpeed=0, safeDistance=9999, currentSpeed=0, bstacleDistance=9999, power=True)
+    system_info = manager.SystemInfo()  # pylint: disable=no-member
 
     # listener_process = multiprocessing.Process(target=lambda x: print("P"), args=(True,))
     listener_process = multiprocessing.Process(
@@ -51,13 +51,16 @@ def main():
 
     listener_process.start()
 
+    # for testing purposes
+    listener_process.join()
+
     #listen_pid = listener_process.pid
 
     #print(str(os.getpid()) + " <> " + str(listen_pid))
 
     # if os.getpid() != listen_pid:
-    acc_instance = acc.ACC(command_queue, 150, 80)
-    acc_instance.run()
+    #acc_instance = acc.ACC(command_queue, 150, 80)
+    # acc_instance.run()
     # acc.main(command_queue)
 
 
